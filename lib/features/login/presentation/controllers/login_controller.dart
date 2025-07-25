@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cric/features/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,7 +39,6 @@ class LoginController extends GetxController {
     checkAuthAndNavigate();
   }
 
-
   void login() async {
     emailController.text = "eve.holt@reqres.in";
     passwordController.text = "cityslicka";
@@ -61,7 +61,17 @@ class LoginController extends GetxController {
       // ✅ Save token to SharedPreferences
       await prefs.setString('auth_token', token);
 
-      Get.offAllNamed('/home');
+      final tokenPrefs = prefs.getString('auth_token');
+
+      if (tokenPrefs != null) {
+        log("Auth tokenPrefs: $token");
+      } else {
+        log("No auth tokenPrefs found.");
+      }
+
+      Get.offAll(() => HomeScreen());
+
+      // Get.offAllNamed('/home');
     } catch (e) {
       Get.snackbar(
         'Login Failed',

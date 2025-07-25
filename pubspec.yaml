@@ -37,6 +37,7 @@ dependencies:
   get: ^4.7.2
   shared_preferences: ^2.5.3
   dio: ^5.8.0+1
+  graphql_flutter: ^5.2.0
 
 dev_dependencies:
   flutter_test:
