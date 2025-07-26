@@ -1,11 +1,17 @@
 import 'package:cric/core/root_binding.dart';
+import 'package:cric/core/simple_background_handler.dart';
 import 'package:cric/features/home/presentation/pages/home_screen.dart';
 import 'package:cric/features/login/presentation/controllers/login_controller.dart';
 import 'package:cric/features/login/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize background handler
+  await SimpleBackgroundHandler.initialize();
+  
   runApp(const MyApp());
 }
 

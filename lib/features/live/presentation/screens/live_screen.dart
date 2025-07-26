@@ -31,21 +31,55 @@ class LiveScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Live Matches"),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: controller.fetchLiveData,
-          ),
+          Obx(() => controller.isLoading.value
+              ? const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: controller.refreshData,
+                )),
         ],
       ),
       body: Obx(() {
-        if (controller.liveData.value == null && controller.error.isNotEmpty) {
-          return Center(child: Text(controller.error.value));
-        }
+              if (controller.liveData.value == null && controller.error.isNotEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.wifi_off,
+                        size: 64,
+                        color: Colors.grey[400],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        controller.error.value,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: controller.refreshData,
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
+              }
 
-        final liveData = controller.liveData.value;
-        if (liveData == null || liveData.typeMatches == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
+              final liveData = controller.liveData.value;
+              if (liveData == null || liveData.typeMatches == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
         final List liveMatches = liveData.typeMatches!
             .expand((type) => type.seriesMatches ?? [])
