@@ -22,6 +22,13 @@ import 'package:cric/features/live/data/repositories/live_repository_impl.dart';
 import 'package:cric/features/live/domain/usecases/get_live_data.dart';
 import 'package:cric/features/live/presentation/controllers/live_controller.dart';
 
+// ✅ Theme Feature
+import 'package:cric/features/theme/data/repositories/theme_repository_impl.dart';
+import 'package:cric/features/theme/domain/usecases/get_current_theme.dart';
+import 'package:cric/features/theme/domain/usecases/set_theme.dart';
+import 'package:cric/features/theme/domain/usecases/toggle_theme.dart';
+import 'package:cric/features/theme/presentation/controllers/theme_controller.dart';
+
 class RootBinding implements Bindings {
   @override
   void dependencies() {
@@ -48,5 +55,16 @@ class RootBinding implements Bindings {
     final liveRepository = LiveRepositoryImpl(liveRemoteDataSource);
     final getLiveDataUseCase = GetLiveData(liveRepository);
     Get.put<LiveController>(LiveController(getLiveDataUseCase: getLiveDataUseCase));
+
+    // ✅ Theme
+    final themeRepository = ThemeRepositoryImpl();
+    final getCurrentTheme = GetCurrentTheme(themeRepository);
+    final setTheme = SetTheme(themeRepository);
+    final toggleTheme = ToggleTheme(themeRepository);
+    Get.put<ThemeController>(ThemeController(
+      getCurrentTheme: getCurrentTheme,
+      setTheme: setTheme,
+      toggleTheme: toggleTheme,
+    ));
   }
 }

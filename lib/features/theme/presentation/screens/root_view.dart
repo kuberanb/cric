@@ -1,0 +1,44 @@
+
+
+import 'package:cric/core/theme_service.dart';
+import 'package:cric/features/home/presentation/pages/home_screen.dart';
+import 'package:cric/features/login/presentation/controllers/login_controller.dart';
+import 'package:cric/features/login/presentation/screens/login_screen.dart';
+import 'package:cric/features/theme/presentation/controllers/theme_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class RootView extends StatelessWidget {
+  const RootView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Access after bindings are ready
+    final themeController = Get.find<ThemeController>();
+
+    return Obx(() => GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppThemeService.getLightTheme(),
+          darkTheme: AppThemeService.getDarkTheme(),
+          themeMode: themeController.isDarkMode
+              ? ThemeMode.dark
+              : ThemeMode.light,
+          home: Obx(() {
+            final loginController = Get.find<LoginController>();
+
+            if (loginController.isCheckingAuth.value) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            return loginController.isAuthenticated.value
+                ? HomeScreen()
+                : LoginView();
+          }),
+          getPages: [
+            GetPage(name: '/login', page: () => LoginView()),
+          ],
+        ));
+  }
+}
