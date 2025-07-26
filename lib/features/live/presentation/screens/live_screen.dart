@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cric/features/chart/presentation/pages/chart_screen.dart';
 import 'package:cric/features/live/data/models/live_data_model.dart';
 import 'package:cric/features/live/presentation/controllers/live_controller.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class LiveScreen extends StatelessWidget {
-  const LiveScreen({super.key});
+  LiveScreen({super.key});
 
   String formatMatchDate(String? timestampStr) {
     if (timestampStr == null) return 'N/A';
@@ -86,9 +87,21 @@ class LiveScreen extends StatelessWidget {
                 final isLive =
                     (matchInfo.state?.toLowerCase() ?? '') != 'complete';
 
-                final rng = Random();
-                final odds1 = (rng.nextDouble() * 0.8 + 0.1).toStringAsFixed(2);
-                final odds2 = (rng.nextDouble() * 0.8 + 0.1).toStringAsFixed(2);
+                // final rng = Random();
+                // final odds1 = (rng.nextDouble() * 0.8 + 0.1).toStringAsFixed(2);
+                // final odds2 = (rng.nextDouble() * 0.8 + 0.1).toStringAsFixed(2);
+
+                final latestOdds1 =
+                    match.matchOdds?.team1OddsHistory?.isNotEmpty == true
+                    ? match.matchOdds!.team1OddsHistory!.last.value
+                          ?.toStringAsFixed(2)
+                    : 'N/A';
+
+                final latestOdds2 =
+                    match.matchOdds?.team2OddsHistory?.isNotEmpty == true
+                    ? match.matchOdds!.team2OddsHistory!.last.value
+                          ?.toStringAsFixed(2)
+                    : 'N/A';
 
                 return Card(
                   elevation: isLive ? 5 : 2,
@@ -149,11 +162,28 @@ class LiveScreen extends StatelessWidget {
                                   Expanded(
                                     child: _buildOddsSection(
                                       team1,
-                                      odds1,
+                                      // odds1
+                                      latestOdds1,
                                       team2,
-                                      odds2,
+
+                                      // odds2
+                                      latestOdds2,
                                     ),
                                   ),
+                                  const SizedBox(width: 16),
+                                  if (isLive)
+                                    Expanded(
+                                      child: IconButton(
+                                        onPressed: () {
+                                          Get.to(
+                                            () => ChartScreen(
+                                              matchOdds: match.matchOdds,
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(Icons.bar_chart_sharp),
+                                      ),
+                                    ),
                                 ],
                               )
                             : Column(
@@ -168,7 +198,30 @@ class LiveScreen extends StatelessWidget {
                                     team2Score,
                                   ),
                                   const SizedBox(height: 12),
-                                  _buildOddsSection(team1, odds1, team2, odds2),
+                                  _buildOddsSection(
+                                    team1,
+                                    latestOdds1,
+                                    team2,
+                                    latestOdds2,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  if (isLive)
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Get.to(
+                                              () => ChartScreen(
+                                                matchOdds: match.matchOdds,
+                                              ),
+                                            );
+                                          },
+                                          child: Text("Chart"),
+                                        ),
+                                      ],
+                                    ),
                                 ],
                               ),
                       ),

@@ -32,6 +32,7 @@ class LiveController extends GetxController {
       liveData.value = data;
       _retryCount = 0;
     } catch (e) {
+      log("excption occured in fetchLiveData api : $e");
       _retryCount++;
       error.value = 'Error fetching live data ($_retryCount)';
       if (_retryCount >= 3) _timer?.cancel();

@@ -121,8 +121,9 @@ class SeriesAdWrapper {
 class Matches {
   MatchInfo? matchInfo;
   MatchScore? matchScore;
+  MatchOdds? matchOdds; // ✅ New field
 
-  Matches({this.matchInfo, this.matchScore});
+  Matches({this.matchInfo, this.matchScore, this.matchOdds});
 
   Matches.fromJson(Map<String, dynamic> json) {
     matchInfo = json['matchInfo'] != null
@@ -130,6 +131,9 @@ class Matches {
         : null;
     matchScore = json['matchScore'] != null
         ? MatchScore.fromJson(json['matchScore'])
+        : null;
+    matchOdds = json['matchOdds'] != null
+        ? MatchOdds.fromJson(json['matchOdds'])
         : null;
   }
 
@@ -141,8 +145,55 @@ class Matches {
     if (matchScore != null) {
       data['matchScore'] = matchScore!.toJson();
     }
+    if (matchOdds != null) data['matchOdds'] = matchOdds!.toJson();
+
     return data;
   }
+}
+
+// ✅ NEW: MatchOdds and OddsPoint
+class MatchOdds {
+  List<OddsPoint>? team1OddsHistory;
+  List<OddsPoint>? team2OddsHistory;
+
+  MatchOdds({this.team1OddsHistory, this.team2OddsHistory});
+
+  MatchOdds.fromJson(Map<String, dynamic> json) {
+    if (json['team1OddsHistory'] != null) {
+      team1OddsHistory = List<OddsPoint>.from(
+        json['team1OddsHistory'].map((x) => OddsPoint.fromJson(x)),
+      );
+    }
+    if (json['team2OddsHistory'] != null) {
+      team2OddsHistory = List<OddsPoint>.from(
+        json['team2OddsHistory'].map((x) => OddsPoint.fromJson(x)),
+      );
+    }
+  }
+
+  Map<String, dynamic> toJson() => {
+    'team1OddsHistory': team1OddsHistory?.map((x) => x.toJson()).toList(),
+    'team2OddsHistory': team2OddsHistory?.map((x) => x.toJson()).toList(),
+  };
+}
+
+class OddsPoint {
+  double? value;
+  DateTime? timestamp;
+
+  OddsPoint({this.value, this.timestamp});
+
+  OddsPoint.fromJson(Map<String, dynamic> json) {
+    value = (json['value'] as num?)?.toDouble();
+    timestamp = json['timestamp'] != null
+        ? DateTime.tryParse(json['timestamp'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() => {
+    'value': value,
+    'timestamp': timestamp?.toIso8601String(),
+  };
 }
 
 class MatchInfo {
