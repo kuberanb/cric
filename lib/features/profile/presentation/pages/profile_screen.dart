@@ -44,7 +44,7 @@ class ProfileScreen extends StatelessWidget {
                   ProfileText(label: 'Email', value: user.email),
                   ProfileText(label: 'Phone', value: user.phone),
                   const SizedBox(height: 24),
-                  
+
                   // Theme Toggle Section
                   Card(
                     child: Padding(
@@ -55,17 +55,16 @@ class ProfileScreen extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                themeController.isDarkMode 
-                                    ? Icons.dark_mode 
+                                themeController.isDarkMode
+                                    ? Icons.dark_mode
                                     : Icons.light_mode,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                               const SizedBox(width: 12),
                               Text(
                                 'App Theme',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -74,26 +73,30 @@ class ProfileScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  themeController.isDarkMode 
-                                      ? 'Dark Mode' 
+                                  themeController.isDarkMode
+                                      ? 'Dark Mode'
                                       : 'Light Mode',
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ),
-                              Obx(() => Switch(
-                                value: themeController.isDarkMode,
-                                onChanged: (value) {
-                                  themeController.toggleThemeMode();
-                                },
-                                activeColor: Theme.of(context).colorScheme.primary,
-                              )),
+                              Obx(
+                                () => Switch(
+                                  value: themeController.isDarkMode,
+                                  onChanged: (value) {
+                                    themeController.toggleThemeMode();
+                                  },
+                                  activeColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                ),
+                              ),
                             ],
                           ),
                         ],
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 32),
                   Center(
                     child: SizedBox(
@@ -101,6 +104,8 @@ class ProfileScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           // Add logout logic here
+                          controller.logout();
+
                           print('Logout button pressed');
                         },
                         child: const Text('Logout'),
