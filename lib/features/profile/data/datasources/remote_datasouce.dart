@@ -1,17 +1,17 @@
-
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class RemoteDataSource {
   final GraphQLClient client;
 
   RemoteDataSource()
-      : client = GraphQLClient(
-          link: HttpLink("https://graphqlzero.almansi.me/api"),
-          cache: GraphQLCache(),
-        );
+    : client = GraphQLClient(
+        link: HttpLink("https://graphqlzero.almansi.me/api"),
+        cache: GraphQLCache(),
+      );
 
   Future<Map<String, dynamic>> fetchUser(int id) async {
-    final String query = '''
+    final String query =
+        '''
     query {
       user(id: $id) {
         id
@@ -22,9 +22,7 @@ class RemoteDataSource {
     }
     ''';
 
-    final result = await client.query(
-      QueryOptions(document: gql(query)),
-    );
+    final result = await client.query(QueryOptions(document: gql(query)));
 
     if (result.hasException) {
       throw Exception(result.exception.toString());
